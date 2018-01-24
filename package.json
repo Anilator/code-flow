@@ -1,5 +1,5 @@
 {
-  "name": "code-flow",
+  "name": "flow-code-description",
   "version": "1.0.0",
   "description": "a function for work with \"code-flow\" description objects",
   "main": "flow.js",
