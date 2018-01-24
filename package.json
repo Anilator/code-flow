@@ -1,19 +1,26 @@
 {
   "name": "code-flow",
   "version": "1.0.0",
-  "description": "A function for work with \"code-flow\" description objects",
+  "description": "a function for work with \"code-flow\" description objects",
   "main": "flow.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anilator/code-flow.git"
+  },
   "keywords": [
-    "async",
-    "flow",
-    "description",
     "function",
-    "simple",
-    "no-dependencies"
+    "no-dependencies",
+    "async",
+    "code-management",
+    "code-description"
   ],
   "author": "Evgenii Klimov",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anilator/code-flow/issues"
+  },
+  "homepage": "https://github.com/Anilator/code-flow#readme"
 }
