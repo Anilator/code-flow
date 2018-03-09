@@ -15,39 +15,65 @@ mainFlow.steps = {
     'interface is ready': renderInterface,
     // ...
 }
-mainFlow.result('start');
+mainFlow.done('start');
 
 function getConfig() {
     // ...
 ```
 
-`mainFlow.steps` is a list of states of your app.
-The App execution starts by `mainFlow.result('start')`. This function sets the current state.
+`mainFlow.steps` is a list of states of your app execution.
+The App execution starts by `mainFlow.done('start')`. This function summarizes the current state.
 
-Step `start` means: "some function had finished it's execution and the App stepped to start. Then a function `getConfig` must be executed".
+The meaning of `mainFlow.done('start')` is: "the program has finished a step called "start". Then a function specified in `mainFlow.steps` must be executed. This function is `getConfig`".
 
-A function may return its result to the second argument:
+A result of the finished step may be specified in the second argument:
 ```js
 function getInterface() {
     let interface = {};
     // some actions ...
-    mainFlow.result('interface is ready', interface);
+    mainFlow.done('interface is ready', interface);
 }
 ```
 
-This result will be given to `renderInterface`:
+This result will be transmitted to the next function (it's `renderInterface` in this case):
 ```js
 function renderInterface(interface) {
     console.log(interface);
     // ...
-    mainFlow.result('interface is rendered');
+    mainFlow.done('interface is rendered');
 }
 ```
 
 
-## Constructor
+## Steps
+A finished step may execute several functions asynchronously:
+```
+mainFlow.steps = {
+    'start': getConfig,
+    'config is OK': [checkDataBase, getInterface]
+    // ...
+}
+```
+
+You may check if a step finished:
+```
+if (mainFlow.isDone('database is OK')) { // getting data from the base... }
+```
+
+
+## A Constructor parameters
 `Flow` accepts one boolean argument that may turn on the flow logging.
 ```js
 const mainFlow = new Flow(true); // console logging is turned on
-const mainFlow = new Flow(false);  // logging is turned off
+```
+This is how it looks:
+```
+-->  start 
+
+-->  config is OK 
+
+-->  database is OK 
+
+-->  interface is ready
+
 ```
