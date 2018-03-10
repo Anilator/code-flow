@@ -57,11 +57,11 @@ mainFlow.steps = {
 
 You may check if a step finished:
 ```
-if (mainFlow.isDone('database is OK')) { // getting data from the base... }
+if (mainFlow['database is OK'].isDone) { // getting data from the base... }
 ```
 
 
-## A Constructor parameters
+## A Constructor parameters //CHANGED
 `Flow` accepts one boolean argument that may turn on the flow logging.
 ```js
 const mainFlow = new Flow(true); // console logging is turned on
