@@ -21,8 +21,8 @@ function getConfig() {
     // ...
 ```
 
-`mainFlow.steps` is a list of states of your app execution.
-The App execution starts by `mainFlow.done('start')`. This function summarizes the current state.
+`mainFlow.steps` is a list of steps of your app execution.
+The App execution starts by `mainFlow.done('start')`. A function `done` summarizes the current step.
 
 The meaning of `mainFlow.done('start')` is: "the program has finished a step called "start". Then a function specified in `mainFlow.steps` must be executed. This function is `getConfig`".
 
@@ -44,6 +44,8 @@ function renderInterface(interface) {
 }
 ```
 
+.
+
 
 ## Steps
 A finished step may execute several functions asynchronously:
@@ -60,20 +62,29 @@ You may check if a step finished:
 if (mainFlow['database is OK'].isDone) { // getting data from the base... }
 ```
 
+.
 
-## A Constructor parameters //CHANGED
-`Flow` accepts one boolean argument that may turn on the flow logging.
+## Asynchronous race
+Beware of setting one function as a result of several different steps:
+```
+mainFlow.steps = {
+    'file 1 is read': mixFiles,
+    'file 2 is read': mixFiles,
+}
+```
+A function may depend on data received from different asynchronous sources `mixFiles (file1, file2)`. Current version of **Flow** does not handle this case. You may store that data and check it manually.
+
+.
+
+
+## A Constructor parameters
+`Flow` accepts an Object with settings as an argument.
 ```js
-const mainFlow = new Flow(true); // console logging is turned on
-```
-This is how it looks:
-```
--->  start 
-
--->  config is OK 
-
--->  database is OK 
-
--->  interface is ready
-
+const defParams = {
+    isLogging: true, // steps logging is turned on
+    isErrors: true,  // errors logging is turned on
+    logStyle: '\x1b[32m%s\x1b[0m', // green font color (Node.js)
+    errStyle: '\x1b[31m%s\x1b[0m', // red font color (Node.js)
+}
+const mainFlow = new Flow (defParams);
 ```
