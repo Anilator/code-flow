@@ -1,4 +1,4 @@
-const defParams = {
+const defSettings = {
     isLogging: true,
     isErrors: true,
 
@@ -7,20 +7,21 @@ const defParams = {
 }
 
 
-module.exports = function Flow (customParams) {
-    let params = Object.assign (defParams, customParams);
-    let { isLogging, isErrors, logStyle, errStyle, logMsg } = params;
-    let currentStep = null;
-    let raceStorage = {};
+module.exports = function Flow (params) {
+    const settings = Object.assign (defSettings, params.settings);
+    const { isLogging, isErrors, logStyle, errStyle, logMsg } = settings;
+    const msg = logMsg || 'done: ';
+    // let currentStep = null;
+    //WIP let raceStorage = {};
 
-    this.steps = {};
+    this.steps = params.steps || {};
+
     this.done = (stepName, dataForStep) => {
         let stepHandler = this.steps[stepName];
 
         if (stepHandler) {
-            stepHandler.isDone = true;
-            currentStep = stepName;
-            isLogging && console.log(logStyle, `-->  ${stepName} \n`);
+            // currentStep = stepName;
+            isLogging && console.log(logStyle, `${msg} ${stepName}`);
 
             if (typeof stepHandler == 'function') {
 
@@ -29,7 +30,6 @@ module.exports = function Flow (customParams) {
 
                 stepHandler.forEach ((func) => func (dataForStep));
             } else if (typeof stepHandler.fn == 'function') {
-
                 //WIP raceStorage[stepHandler] = stepHandler.arg;
 
                 stepHandler.fn (dataForStep);

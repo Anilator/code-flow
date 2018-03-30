@@ -1,6 +1,6 @@
 {
   "name": "flow-code-description",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "a function for work with \"code-flow\" description objects",
   "main": "flow.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Anilator/code-flow.git"
+    "url": "git+https://github.com/klimcode/code-flow.git"
   },
   "keywords": [
     "function",
@@ -17,10 +17,10 @@
     "code-management",
     "code-description"
   ],
-  "author": "Evgenii Klimov",
+  "author": "John Klimov",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Anilator/code-flow/issues"
+    "url": "https://github.com/klimcode/code-flow/issues"
   },
-  "homepage": "https://github.com/Anilator/code-flow#readme"
+  "homepage": "https://github.com/klimcode/code-flow#readme"
 }
