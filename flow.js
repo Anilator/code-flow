@@ -5,7 +5,7 @@ const defSettings = {
     logStyle: '\x1b[32m%s\x1b[0m',
     errStyle: '\x1b[31m%s\x1b[0m',
 
-    logName: 'done: ',
+    logName: '--> ',
 }
 
 
@@ -16,43 +16,43 @@ module.exports = class Flow {
         for (let key in defSettings) {
             if (this.settings[key] === void 0) this.settings[key] = defSettings[key];
         }
+        return this;
     }
 
-    done (stepName, dataForStep) {
+    done (stepName, dataForNextStep) {
         const message = `${this.settings.logName}${stepName}`;
         let stepHandler = this.steps[stepName];
 
-        if (stepHandler) {
-            LOG (message);
+        this.LOG (message); // Previous step is finished
 
+        if (stepHandler) {
             if (typeof stepHandler === 'function') {
-                stepHandler (dataForStep);
-                return true;
+                stepHandler (dataForNextStep);
+                return;
             }
             if (stepHandler instanceof Array) {
-
-                for (func of stepHandler) {
+                for (let func of stepHandler) {
                     if (typeof func !== 'function') {
-                        ERR (`FLOW TYPE ERROR: handler must be a function. \nError in step: "${stepName}"`)
+                        this.ERR (`FLOW TYPE ERROR: handler: "${func}" must be a function`)
                         return false;
                     }
                 }
-                stepHandler.forEach (func => func (dataForStep));
-                return true;
+                stepHandler.forEach (func => func (dataForNextStep));
+                return;
             } 
             if (typeof stepHandler.fn === 'function') {
-                stepHandler.fn (dataForStep);
-                return true;
+                stepHandler.fn (dataForNextStep);
+                return;
             }
 
-            ERR (`FLOW TYPE ERROR: wrong type of a handler. \nError in step: "${stepName}"`);
+            this.ERR (`FLOW TYPE ERROR: wrong type of a handler: "${stepHandler}"`);
             return false;
         } else {
-            ERR (`FLOW ERROR: undefined handler for step: "${stepName}"`);
+            this.ERR (`FLOW ERROR: undefined handler: "${stepHandler}"`);
             return false;
         }
     }
-    start (dataForStep) {
+    start (dataForNextStep) {
         this.done ('start');
     }
 
