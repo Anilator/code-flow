@@ -4,43 +4,65 @@ const defSettings = {
 
     logStyle: '\x1b[32m%s\x1b[0m',
     errStyle: '\x1b[31m%s\x1b[0m',
+
+    logName: 'done: ',
 }
 
 
-module.exports = function Flow (params) {
-    const settings = Object.assign (defSettings, params.settings);
-    const { isLogging, isErrors, logStyle, errStyle, logMsg } = settings;
-    const msg = logMsg || 'done: ';
-    // let currentStep = null;
-    //WIP let raceStorage = {};
+module.exports = class Flow {
+    constructor (params) {
+        this.steps = params.steps || {};
+        this.settings = params.settings;
+        for (let key in defSettings) {
+            if (this.settings[key] === void 0) this.settings[key] = defSettings[key];
+        }
+    }
 
-    this.steps = params.steps || {};
-
-    this.done = (stepName, dataForStep) => {
+    done (stepName, dataForStep) {
+        const message = `${this.settings.logName}${stepName}`;
         let stepHandler = this.steps[stepName];
 
         if (stepHandler) {
-            // currentStep = stepName;
-            isLogging && console.log(logStyle, `${msg} ${stepName}`);
+            LOG (message);
 
-            if (typeof stepHandler == 'function') {
-
+            if (typeof stepHandler === 'function') {
                 stepHandler (dataForStep);
-            } else if (stepHandler instanceof Array) {
-
-                stepHandler.forEach ((func) => func (dataForStep));
-            } else if (typeof stepHandler.fn == 'function') {
-                //WIP raceStorage[stepHandler] = stepHandler.arg;
-
-                stepHandler.fn (dataForStep);
-            } else {
-
-                isErrors && console.error (errStyle, `FLOW TYPE ERROR: Handler must be a function or an Array. Error in step: "${stepName}"`);
-                return false;
+                return true;
             }
-        } else {
+            if (stepHandler instanceof Array) {
 
-            isErrors && console.error (errStyle, `FLOW ERROR: undefined handler for step: "${stepName}"`);
+                for (func of stepHandler) {
+                    if (typeof func !== 'function') {
+                        ERR (`FLOW TYPE ERROR: handler must be a function. \nError in step: "${stepName}"`)
+                        return false;
+                    }
+                }
+                stepHandler.forEach (func => func (dataForStep));
+                return true;
+            } 
+            if (typeof stepHandler.fn === 'function') {
+                stepHandler.fn (dataForStep);
+                return true;
+            }
+
+            ERR (`FLOW TYPE ERROR: wrong type of a handler. \nError in step: "${stepName}"`);
+            return false;
+        } else {
+            ERR (`FLOW ERROR: undefined handler for step: "${stepName}"`);
+            return false;
         }
+    }
+    start (dataForStep) {
+        this.done ('start');
+    }
+
+    // Let's imagine these are private methods
+    ERR (msg) {
+        const { isErrors, errStyle } = this.settings;
+        isErrors && console.error (errStyle, msg);
+    }
+    LOG (msg) {
+        const { isLogging, logStyle } = this.settings;
+        isLogging && console.log (logStyle, msg);
     }
 }

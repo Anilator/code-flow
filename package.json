@@ -1,6 +1,6 @@
 {
   "name": "flow-code-description",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "a function for work with \"code-flow\" description objects",
   "main": "flow.js",
   "scripts": {
