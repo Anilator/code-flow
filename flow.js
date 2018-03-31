@@ -48,7 +48,7 @@ module.exports = class Flow {
             this.ERR (`FLOW TYPE ERROR: wrong type of a handler: "${stepHandler}"`);
             return false;
         } else {
-            this.ERR (`FLOW ERROR: undefined handler: "${stepHandler}"`);
+            this.ERR (`FLOW ERROR: undefined handler`);
             return false;
         }
     }
