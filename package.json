@@ -1,6 +1,6 @@
 {
   "name": "flow-code-description",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "a function for work with \"code-flow\" description objects",
   "main": "flow.js",
   "scripts": {
@@ -22,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/klimcode/code-flow/issues"
   },
-  "homepage": "https://github.com/klimcode/code-flow#readme"
+  "homepage": "https://github.com/klimcode/code-flow#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.10.0"
+  }
 }
